@@ -16,8 +16,8 @@
 </head>
 <body>
     <div class="full-page-app">
-        <header>
-            <nav class="navbar navbar-default" role="navigation">
+        <header class="header">
+            <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
                 <div class="container-fluid">
                     <!-- Brand and toggle get grouped for better mobile display -->
                     <div class="navbar-header">
@@ -27,7 +27,10 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#">Time Tracker</a>
+                        <div class="navbar-brand-logo navbar-left">
+                            <img src="img/compass_100x100.png" alt="" />
+                        </div>
+                        <a class="navbar-brand navbar-left" href="#">Time Tracker</a>
                     </div>
 
                     <!-- All nav is floated right, reverse order, and wrapped up in a collapsible div -->
@@ -39,7 +42,7 @@
 
                         <ul class="nav navbar-nav navbar-left">
                             <li class="active"><a href="#">Timesheet</a></li>
-                            <li class="dropdown">
+                            <li class="dropdown hidden">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="#">By Project</a></li>
@@ -55,34 +58,197 @@
             </nav>
         </header>
 
-        <main>
+        <main class="main" role="main">
             <div class="timesheet">
                 <div class="timesheet-header">
-                    <h3 class="timesheet-title">
-                       Timesheet 
-                    </h3>
+
+                    <div class="control-group">
+                        <label class="control-label">Year</label>
+                        <select class="form-control">
+                            <option>2014</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Week</label>
+                        <select class="form-control">
+                            <option>16</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <button class="btn btn-default"><i class="glyphicon glyphicon-step-backward"></i></button>
+                        <button class="btn btn-default"><i class="glyphicon glyphicon-step-forward"></i></button>
+                    </div>
+                    <div class="control-group copy-control-group">
+                        <select class="form-control">
+                            <option>15</option>
+                        </select>
+                        <button class="btn btn-default pull-left indent"><i class="glyphicon glyphicon-share-alt"></i> Copy Week</button>
+                    </div>
+                    <div class="control-group pull-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> Add</button>
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li><a href="#">INA-12493 Quickservice</a></li>
+                                <li><a href="#">INA-15822 Mobile Landing Pages</a></li>
+                                <li><a href="#">INA-12584 Home Online Responsive</a></li>
+                                <li><a href="#">DOC-12493 Auto Online Responsive</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">PTO</a></li>
+                                <li><a href="#">Sick</a></li>
+                                <li><a href="#">Project Other</a></li>
+                            </ul>
+                        </div>
+                        <button class="btn btn-primary"><i class="glyphicon glyphicon-save"></i> Save</button>
+                    </div>
                 </div>
                 <div class="timesheet-content">
-                    <p>Main</p>
+
+                    <table class="table timesheet-table">
+                        <thead>
+                            <tr>
+                                <th class="">Activity</th>
+                                <th class="">Domain</th>
+                                <th class="">Project</th>
+                                <th class="">Phase</th>
+                                <th class="">&nbsp;</th>
+                                <th class="day-header">Mon</th>
+                                <th class="day-header">Tue</th>
+                                <th class="day-header">Wed</th>
+                                <th class="day-header">Thu</th>
+                                <th class="day-header">Fri</th>
+                                <th class="day-header">Sat</th>
+                                <th class="day-header">Sun</th>
+                                <th class="day-header">&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="copyme">
+                                <td class="select">
+                                    <select class="form-control">
+                                        <option>Project Tracker</option>
+                                    </select>
+                                </td>
+                                <td class="select">
+                                    <select class="form-control">
+                                        <option>Interactive</option>
+                                    </select>
+                                </td>
+                                <td class="select">
+                                    <select class="form-control">
+                                        <option>INA-12493 Quickservice</option>
+                                    </select>
+                                </td>
+                                <td class="select">
+                                    <select class="form-control">
+                                        <option>Build Phase</option>
+                                    </select>
+                                </td>
+                                <td class="entry-actions">
+                                    <button class="btn btn-default"><i class="glyphicon glyphicon-comment"></i></button>
+                                    <button class="btn btn-default"><i class="glyphicon glyphicon-trash"></i></button>
+                                </td>
+
+                                <td class="day-control"><input type="text" class="form-control" value="7" /></td>
+                                <td class="day-control"><input type="text" class="form-control" value="5" /></td>
+                                <td class="day-control"><input type="text" class="form-control" value="4" /></td>
+                                <td class="day-control"><input type="text" class="form-control" value="3" /></td>
+                                <td class="day-control"><input type="text" class="form-control" value="5" /></td>
+                                <td class="day-control"><input type="text" class="form-control" value="8" /></td>
+                                <td class="day-control"><input type="text" class="form-control" value="3" /></td>
+                                <td class="day-control"><input type="text" class="form-control" value="29" disabled readonly /></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>Totals:</td>
+                                <td class="day-footer">4</td>
+                                <td class="day-footer">9</td>
+                                <td class="day-footer">6</td>
+                                <td class="day-footer">8</td>
+                                <td class="day-footer">9</td>
+                                <td class="day-footer">8</td>
+                                <td class="day-footer">6</td>
+                                <td class="day-footer">40</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
                 </div>
-            </div>
-            <div class="sidebar">
-                <p>Sidebar</p>
             </div>
         </main>
 
-        <footer>
+        <footer class="footer">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-12">
-                        <div class="text-center muted">Version 1.05.03</div>
+                        <div class="text-center text-muted small">Current Date 04/24/2014 1:16:14 PM ~ Environment Information CXBROWN - WICL50X6TZ1 - Server Install Date - 04/24/2014 9:36:10 AM Version 1.05.03</div>
                     </div>
                 </div>
             </div>
         </footer>
     </div>
 
+    <!-- Loading messages -->
+    <div class="message-container">
+        <div class="message">
+            <div class="message-processing push"><img src="img/processing.gif" alt="" /></div>
+            Downloading Timesheet Data
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal comment-modal fade" id="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <input type="text" class="form-control comment-text-input" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Save changes</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            var $e = $('#copyme');
+            $e.after($e.clone());
+            $e.after($e.clone());
+            $e.after($e.clone());
+            $e.after($e.clone());
+            $e.after($e.clone());
+
+            $('.btn').on('click', function () {
+                $('.message-container').show(200, 'swing');
+                window.setTimeout(function () {
+                    $('.message-container').hide(1000, 'swing');
+                }, 3000);
+            });
+
+            $('#modal').on('shown.bs.modal', function (e) {
+                $(this).find('.form-control').first().focus();
+            });
+            $('.glyphicon-comment').on('click', function () {
+                $('#modal').modal();
+            });
+
+            $('.comment-text-input').on('keydown keyup', function (e) {
+                if (e.keyCode == 13) {
+                    $(this).parents('.modal').find('.btn-primary').click();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
