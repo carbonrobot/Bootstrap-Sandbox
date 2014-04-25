@@ -2,20 +2,152 @@
 @{
     ViewBag.Title = "Time Tracker";
 }
+
+<main class="main" role="main">
+    <div class="timesheet">
+        <div class="timesheet-header" id="timesheetheader">
+
+            <div class="control-group">
+                <label class="control-label">Year</label>
+                <select class="form-control" data-bind="value: SelectedYear, event: { change: onSelectedYearChanged }">
+                    @foreach (var year in Model.YearList)
+                    {
+                        <option value="@year">@year</option>
+                    }
+                </select>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Week</label>
+                <select class="form-control" data-bind="value: SelectedWeek, event: { change: onSelectedWeekChanged }">
+                    @foreach (var week in Model.WeekList)
+                    {
+                        <option value="@week.WeekNumber">@week.WeekNumber</option>
+                    }
+                </select>
+            </div>
+            <div class="control-group">
+                <button class="btn btn-default" data-bind="click: PreviousWeek"><i class="glyphicon glyphicon-step-backward"></i></button>
+                <button class="btn btn-default" data-bind="click: NextWeek"><i class="glyphicon glyphicon-step-forward"></i></button>
+            </div>
+            <div class="control-group copy-control-group">
+                <select class="form-control" data-bind="value: SelectedCopyWeek">
+                    @foreach (var week in Model.WeekList)
+                    {
+                        <option value="@week.WeekNumber">@week.WeekNumber</option>
+                    }
+                </select>
+                <button class="btn btn-default pull-left indent" data-bind="click: timeSheetModel.Copy"><i class="glyphicon glyphicon-share-alt"></i> Copy Week</button>
+            </div>
+            <div class="control-group pull-right">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default" data-bind="click: timeSheetModel.Add"><i class="glyphicon glyphicon-plus"></i> Add</button>
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu pull-right" role="menu">
+                        <li><a href="#">INA-12493 Quickservice</a></li>
+                        <li><a href="#">INA-15822 Mobile Landing Pages</a></li>
+                        <li><a href="#">INA-12584 Home Online Responsive</a></li>
+                        <li><a href="#">DOC-12493 Auto Online Responsive</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">PTO</a></li>
+                        <li><a href="#">Sick</a></li>
+                        <li><a href="#">Project Other</a></li>
+                    </ul>
+                </div>
+                <button class="btn btn-primary" data-bind="click: timeSheetModel.onSave"><i class="glyphicon glyphicon-save"></i> Save</button>
+            </div>
+        </div>
+        <div class="timesheet-content">
+
+            <table class="table timesheet-table">
+                <thead>
+                    <tr>
+                        <th>Activity</th>
+                        <th>Domain</th>
+                        <th>Project</th>
+                        <th>Phase</th>
+                        <th>&nbsp;</th>
+                        <th class="day-header">Mon</th>
+                        <th class="day-header">Tue</th>
+                        <th class="day-header">Wed</th>
+                        <th class="day-header">Thu</th>
+                        <th class="day-header">Fri</th>
+                        <th class="day-header">Sat</th>
+                        <th class="day-header">Sun</th>
+                        <th class="day-header">&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="select">
+                            <select class="form-control" data-bind="value: ActivityID, options: $root.Activities, optionsText: 'Description', optionsValue: 'ID'"></select>
+                        </td>
+                        <td class="select">
+                            <select class="form-control" data-bind="value: DomainID, visibility: DomainOption() != 0">
+                            @foreach (var domain in Model.Domains.OrderBy(x => x.Description))
+                            {
+                                <option value="@domain.ID">@domain.Description</option>
+                            }
+                            </select>
+                        </td>
+                        <td class="select">
+                            <select class="form-control" data-bind="value: ProjectNumber, visibility: ProjectOption() != 0, valueAllowUnset: true, optionsCaption: 'test'">
+                            @foreach (var project in Model.Projects.OrderBy(x => x.ID))
+                            {
+                                <option value="@project.ID">@string.Format("{0} - {1}", project.ID, project.Description)</option>
+                            }
+                            </select>
+                        </td>
+                        <td class="select">
+                            <select class="form-control" data-bind="value: Phase, visibility: PhaseOption() != 0">
+                            @*@foreach (var phase in Model.Phases.Where(x => x.Active).OrderBy(x => x.Order))*@
+                            @foreach (var phase in Model.Phases.OrderBy(x => x.Order))
+                            {
+                                <option value="@phase.ID">@phase.Phase</option>
+                            }
+                            </select>
+                        </td>
+                        <td class="entry-actions">
+                            <button class="btn btn-default" data-bind="click: ShowComment"><i class="glyphicon glyphicon-comment"></i></button>
+                            <button class="btn btn-default" data-bind="click: $root.Remove"><i class="glyphicon glyphicon-trash"></i></button>
+                        </td>
+
+                        <td class="day-control"><input type="text" class="form-control" data-bind="value: Monday"/> </td>
+                        <td class="day-control"><input type="text" class="form-control" data-bind="value: Tuesday"/> </td>
+                        <td class="day-control"><input type="text" class="form-control" data-bind="value: Wednesday"/> </td>
+                        <td class="day-control"><input type="text" class="form-control" data-bind="value: Thursday"/> </td>
+                        <td class="day-control"><input type="text" class="form-control" data-bind="value: Friday"/> </td>
+                        <td class="day-control"><input type="text" class="form-control" data-bind="value: Saturday"/> </td>
+                        <td class="day-control"><input type="text" class="form-control" data-bind="value: Sunday"/> </td>
+                        <td class="day-control"><input type="text" class="form-control" data-bind="value: ActivityRowTotal" disabled readonly /></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>Totals:</td>
+                        <td class="day-footer" data-bind="text: MondayTotal"></td>
+                        <td class="day-footer" data-bind="text: TuesdayTotal"></td>
+                        <td class="day-footer" data-bind="text: WednesdayTotal"></td>
+                        <td class="day-footer" data-bind="text: ThursdayTotal"></td>
+                        <td class="day-footer" data-bind="text: FridayTotal"></td>
+                        <td class="day-footer" data-bind="text: SaturdayTotal"></td>
+                        <td class="day-footer" data-bind="text: SundayTotal"></td>
+                        <td class="day-footer" data-bind="text: Total"></td>
+                    </tr>
+                </tfoot>
+            </table>
+
+        </div>
+    </div>
+</main>
+
 @section Scripts {
     <script type="text/javascript">
-        function onSave() {
-            timeSheetModel.Save();
-        };
-
-        function Add() {
-            timeSheetModel.Add();
-        };
-        
-        function Copy() {
-            timeSheetModel.Copy();
-        };
-
         var timeSheetModel = new TimeSheetModel("@Authentication.Current.EmployeeInfo.DomainID");
         var headerModel = new HeaderModel(@Model.SelectedYear, @Model.SelectedWeek, @Model.CopyWeek);
         $(function () { // When screen is ready
@@ -30,205 +162,3 @@
         //};
     </script>
 }
-<div id="timesheetheader">
-    <div class="container timesheet-header">
-        <section class="timesheet-section timesheet-controls">
-                <div class="row-fluid">
-                    <div class="span6">
-                        <span>Year:</span>
-                        <!-- TODO: better handle on load after changing drop downs-->
-                        <select class="small" data-bind="value: SelectedYear, event: { change: onSelectedYearChanged }" name="SelectedYear">
-                            @foreach (var year in Model.YearList)
-                            {
-                            <option value="@year">@year</option>
-                            }
-                        </select>
-                        <span>Week:</span>
-                        <select class="small" data-bind="value: SelectedWeek, event: { change: onSelectedWeekChanged }" name="SelectedWeek">
-                            @foreach (var week in Model.WeekList)
-                            {
-                            <option value="@week.WeekNumber">@week.WeekNumber</option>
-                            }
-                        </select>
-                        <button class="btn" data-bind="click: PreviousWeek"><i class="icon-step-backward"></i></button>
-                        <button class="btn" data-bind="click: NextWeek"><i class="icon-step-forward"></i></button>
-                    </div>
-                    <div class="span3">
-                        <select class="small" data-bind="value: SelectedCopyWeek" name="CopyWeek">
-                            @foreach (var week in Model.WeekList)
-                            {
-                            <option value="@week.WeekNumber">@week.WeekNumber</option>
-                            }
-                        </select>
-                        <button class="btn" onclick="Copy(); return false;"><i class="icon-share-alt"></i> Copy Week</button>
-                    </div>
-                    <div class="span3">
-                        <div class="right">
-                            <button class="btn" onclick="Add();return false;"><i class="icon-plus"></i> Add</button>
-                            <button class="btn btn-primary" onclick="onSave();return false;"><i class="icon-ok-sign icon-white"></i> Save</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        <hr />
-    </div>
-</div>
-@*<section class="span12" id="timer" style="display: none">
-    <div class="row-fluid">
-        <h4>Timer</h4>
-    </div>
-    <div class="row-fluid">
-        <ul class="menubar">
-            <li class="timeEntryRow">
-                <div class="span9 trackerEntryRowDetails">
-                    <select class="medium">
-                        @foreach (var activity in Model.Activities.Where(x => x.Active).OrderBy(x => x.Order))
-                        {
-                        <option value="@activity.ID">@activity.Description</option>
-                        }
-                    </select>
-                    <select class="medium">
-                        @foreach (var domain in Model.Domains.OrderBy(x => x.Description))
-                        {
-                        <option value="@domain.ID">@domain.Description</option>
-                        }
-                    </select>
-                    <select class="medium">
-                        @foreach (var project in Model.Projects.OrderBy(x => x.ID))
-                        {
-                        <option value="@project.ID">@string.Format("{0} - {1}", project.ID, project.Description)</option>
-                        }
-                    </select>
-                    <select class="medium">
-                        @foreach (var phase in Model.Phases.Where(x => x.Active).OrderBy(x => x.Order))
-                        {
-                        <option value="@phase.ID">@phase.Phase</option>
-                        }
-                    </select>
-                    <button><span class="ui-icon ui-icon-comment"></span></button>
-                    <button class="icon"><span class="ui-icon ui-icon-play"></span>Start</button>
-                    <input type="text" data-bind="" class="trackerEntry" />
-*@ @*<div class="span12">
-                        <span>Comment</span>
-                        <input type="textbox" value="" style="width: 600px;"/>
-                    </div>*@ @*                </div>
-                <div class="span3">
-                    <div class="right">
-                        <button class="icon"><span class="ui-icon ui-icon-cancel"></span>Cancel</button>
-                        <button class="icon"><span class="ui-icon ui-icon-disk"></span>Save</button>
-                    </div>
-                 </div>
-            </li>
-        </ul>
-    </div>
-</section>*@
-<div class="container timesheet-content" id="timesheet" data-bind="debug: $data">
-<div class="loading" data-bind="visible: IsLoading">Loading&#8230;</div>
-    <div class="row-fluid">
-        <section class="timesheet-section">
-              <div class="timeEntryHeader row-fluid bottom-border">
-                <div class="span7">
-                    <ul class="activity-menu">
-                        <li><span>Activity</span></li>
-                        <li><span>Domain</span></li>
-                        <li><span>Project</span></li>
-                        <li><span>Phase</span></li>
-                    </ul>
-                </div>
-                <div class="span5">
-                    <ul class="weekdays-menu" style="margin-left: 46px">
-                        <li><span>Mon</span></li>
-                        <li><span>Tues</span></li>
-                        <li><span>Wed</span></li>
-                        <li><span>Thur</span></li>
-                        <li><span>Fri</span></li>
-                        <li><span>Sat</span></li>
-                        <li><span>Sun</span></li>
-                        @*<li><button class="icon min" onclick="toggleTimer(); return false;"><span class="ui-icon ui-icon-clock"></span></button></li>*@
-                    </ul>
-                </div>
-              </div>
-        </section>
-        <section style="margin-left: 0;">
-            
-            <ul class="menubar" data-bind="foreach: Projects">
-                <li class="timeEntryRow row-fluid">
-                    <div class="span7 timeEntryRowDetails">
-                    <div class="span12">
-                        <select class="medium" data-bind="value: ActivityID, options: $root.Activities, optionsText: 'Description', optionsValue: 'ID'">
-                        </select>
-                        <select class="medium" data-bind="value: DomainID, visibility: DomainOption() != 0">
-                            @foreach (var domain in Model.Domains.OrderBy(x => x.Description))
-                            {
-                            <option value="@domain.ID">@domain.Description</option>
-                            }
-                        </select>
-                        <select class="medium" data-bind="value: ProjectNumber, visibility: ProjectOption() != 0, valueAllowUnset: true, optionsCaption: 'test'">
-                            @foreach (var project in Model.Projects.OrderBy(x => x.ID))
-                            {
-                            <option value="@project.ID">@string.Format("{0} - {1}", project.ID, project.Description)</option>
-                            }
-                        </select>
-                        <select class="medium" data-bind="value: Phase, visibility: PhaseOption() != 0">
-                            @*@foreach (var phase in Model.Phases.Where(x => x.Active).OrderBy(x => x.Order))*@
-                            @foreach (var phase in Model.Phases.OrderBy(x => x.Order))
-                            {
-                            <option value="@phase.ID">@phase.Phase</option>
-                            }
-                        </select>
-                        <button class="btn" data-bind="event : { click: ShowComment }"><i class="icon-comment"></i></button>
-                        <div class="modal fade" id="comment-modal">
-                          <div class="modal-dialog">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title">Comment</h4>
-                              </div>
-                              <div class="modal-body">
-                                <textarea cols="10" rows="6" style="margin: 0px 0px 10px; width: 513px; height: 120px;"></textarea>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Save</button>
-                              </div>
-                            </div><!-- /.modal-content -->
-                          </div><!-- /.modal-dialog -->
-                        </div><!-- /.modal -->
-                        <button class="btn" data-bind="click: $root.Remove"><i class="icon-trash"></i></button>
-                    </div>
-                </div>
-                <div class="span5 timeEntryRowHours">
-                    <ul class="weekdays-menu">
-                        <li><input type="text" data-bind="value: Monday" class="time"/></li>
-                        <li><input type="text" data-bind="value: Tuesday" class="time"/></li>
-                        <li><input type="text" data-bind="value: Wednesday" class="time"/></li>
-                        <li><input type="text" data-bind="value: Thursday" class="time"/></li>
-                        <li><input type="text" data-bind="value: Friday" class="time"/></li>
-                        <li><input type="text" data-bind="value: Saturday" class="time"/></li>
-                        <li><input type="text" data-bind="value: Sunday" class="time"/></li>
-                        <li><label class="time" data-bind="text: ActivityRowTotal"></label></li>
-                    </ul>
-                </div>
-                </li>
-            </ul>
-            <div class="row-fluid">
-                <div class="span7">
-                    <!-- Do Nothing -->
-                </div>
-                <div class="span5">
-                    <ul class="weekdays-menu total" style="margin-left: 42px">
-                        <li><label class="time" data-bind="text: MondayTotal"></label></li>
-                        <li><label class="time" data-bind="text: TuesdayTotal"></label></li>
-                        <li><label class="time" data-bind="text: WednesdayTotal"></label></li>
-                        <li><label class="time" data-bind="text: ThursdayTotal"></label></li>
-                        <li><label class="time" data-bind="text: FridayTotal"></label></li>
-                        <li><label class="time" data-bind="text: SaturdayTotal"></label></li>
-                        <li><label class="time" data-bind="text: SundayTotal"></label></li>
-                        <li><label class="time" data-bind="text: Total"></label></li>
-                    </ul>
-                </div>
-        
-            </div>
-        </section>
-    </div>
-</div>
